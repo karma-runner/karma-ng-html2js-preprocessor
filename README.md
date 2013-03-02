@@ -1,4 +1,4 @@
-# testacular-ng-html2js-preprocessor
+# testacular-ng-html2js-preprocessor [![Build Status](https://travis-ci.org/testacular/testacular-ng-html2js-preprocessor.png?branch=master)](https://travis-ci.org/testacular/testacular-ng-html2js-preprocessor)
 
 > Preprocessor for converting HTML files to AngularJS templates.
 

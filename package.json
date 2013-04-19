@@ -1,17 +1,17 @@
 {
-  "name": "testacular-ng-html2js-preprocessor",
+  "name": "karma-ng-html2js-preprocessor",
   "version": "0.0.1",
-  "description": "A Testacular plugin. Compile AngularJS templates to JavaScript on the fly.",
+  "description": "A Karma plugin. Compile AngularJS templates to JavaScript on the fly.",
   "main": "lib/index.js",
   "scripts": {
     "test": "grunt test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/testacular/testacular-ng-html2js-preprocessor.git"
+    "url": "git://github.com/karma-runner/karma-ng-html2js-preprocessor.git"
   },
   "keywords": [
-    "testacular-plugin",
+    "karma-plugin",
     "preprocessor",
     "angularjs",
     "angular"
@@ -26,7 +26,7 @@
     "mocha": "~1.8"
   },
   "peerDependencies": {
-    "testacular": "~0.7"
+    "karma": "~0.9"
   },
   "license": "MIT"
 }

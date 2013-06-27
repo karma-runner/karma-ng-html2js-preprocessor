@@ -19,11 +19,13 @@
   "author": "Vojta Jina <vojta.jina@gmail.com>",
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.4.0rc5",
+    "grunt": "~0.4.1",
     "grunt-simple-mocha": "~0.3.2",
     "grunt-contrib-jshint": "~0.1.1rc5",
     "chai": "~1.4",
-    "mocha": "~1.8"
+    "mocha": "~1.8",
+    "grunt-npm": "~0.0.2",
+    "grunt-bump": "~0.0.6"
   },
   "peerDependencies": {
     "karma": "~0.9"

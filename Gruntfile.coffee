@@ -42,15 +42,20 @@ module.exports = (grunt) ->
         boss: true
         globals: {}
 
-  # grunt.loadTasks '../testacular/tasks'
+    bump:
+      options:
+        commitMessage: 'chore: release v%VERSION%'
+        pushTo: 'upstream'
+
   grunt.loadNpmTasks 'grunt-simple-mocha'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-npm'
+  grunt.loadNpmTasks 'grunt-bump'
 
   grunt.registerTask 'default', ['jshint', 'test']
   grunt.registerTask 'test', ['simplemocha:unit']
-  # grunt.registerTask 'release', 'Build, bump and publish to NPM.', (type) ->
-  #   grunt.task.run [
-  #     'build',
-  #     "bump:#{type||'patch'}",
-  #     'npm-publish'
-  #   ]
+  grunt.registerTask 'release', 'Build, bump and publish to NPM.', (type) ->
+    grunt.task.run [
+      "bump:#{type||'patch'}",
+      'npm-publish'
+    ]

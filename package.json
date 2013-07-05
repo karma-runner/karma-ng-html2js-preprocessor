@@ -20,12 +20,13 @@
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-simple-mocha": "~0.3.2",
-    "grunt-contrib-jshint": "~0.1.1rc5",
+    "grunt-simple-mocha": "~0.4",
+    "grunt-contrib-jshint": "~0.6",
     "chai": "~1.4",
     "mocha": "~1.8",
     "grunt-npm": "~0.0.2",
-    "grunt-bump": "~0.0.6"
+    "grunt-bump": "~0.0.7",
+    "grunt-auto-release": "~0.0.2"
   },
   "peerDependencies": {
     "karma": "~0.9"

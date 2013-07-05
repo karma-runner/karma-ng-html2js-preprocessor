@@ -23,7 +23,6 @@ module.exports = (grunt) ->
           src: '<%= files.source %>'
         options:
           node: true,
-          es5: true,
           strict: false
 
       options:
@@ -42,6 +41,10 @@ module.exports = (grunt) ->
         boss: true
         globals: {}
 
+    'npm-contributors':
+      options:
+        commitMessage: 'chore: update contributors'
+
     bump:
       options:
         commitMessage: 'chore: release v%VERSION%'
@@ -56,6 +59,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'test', ['simplemocha:unit']
   grunt.registerTask 'release', 'Build, bump and publish to NPM.', (type) ->
     grunt.task.run [
+      'npm-contributors',
       "bump:#{type||'patch'}",
       'npm-publish'
     ]

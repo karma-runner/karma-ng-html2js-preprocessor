@@ -12,9 +12,10 @@
   },
   "keywords": [
     "karma-plugin",
-    "preprocessor",
+    "karma-preprocessor",
     "angularjs",
-    "angular"
+    "angular",
+    "html2js"
   ],
   "author": "Vojta Jina <vojta.jina@gmail.com>",
   "dependencies": {},

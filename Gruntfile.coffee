@@ -11,8 +11,7 @@ module.exports = (grunt) ->
         reporter: 'dot'
       unit:
         src: [
-          # 'test/mocha-common.js'
-          'test/**/*.coffee'
+          'test/**/*.spec.coffee'
         ]
 
     # JSHint options

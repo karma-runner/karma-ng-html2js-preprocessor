@@ -61,3 +61,52 @@ describe 'preprocessors html2js', ->
     process 'first\\second', file, (processedContent) ->
       expect(removeSpacesFrom processedContent).to.contain "'first\\\\second'"
       done()
+
+  describe 'ngHtml2JsPreprocessor options', ->
+    describe 'stripPrefix', ->
+      it 'strips the given prefix from the file path', (done) ->
+        process = html2js logger, '/base', { stripPrefix: 'path/' }
+
+        file = new File '/base/path/file.html'
+
+        HTML = '<html></html>'
+        RESULT = 'angular.module(\'file.html\',[]).run(function($templateCache){' +
+          '$templateCache.put(\'file.html\',\'<html></html>\');' +
+        '});'
+
+        process HTML, file, (processedContent) ->
+          expect(removeSpacesFrom processedContent).to.equal RESULT
+          done()
+
+    describe 'prependPrefix', ->
+      it 'prepends the given prefix from the file path', (done) ->
+        process = html2js logger, '/base', { prependPrefix: 'served/' }
+
+        file = new File '/base/path/file.html'
+
+        HTML = '<html></html>'
+        RESULT = 'angular.module(\'served/path/file.html\',[]).run(function($templateCache){' +
+          '$templateCache.put(\'served/path/file.html\',\'<html></html>\');' +
+        '});'
+
+        process HTML, file, (processedContent) ->
+          expect(removeSpacesFrom processedContent).to.equal RESULT
+          done()
+
+    describe 'cacheIdFromPath', ->
+      it 'invokes custom transform function', (done) ->
+        process = html2js logger, '/base', {
+          cacheIdFromPath: (filePath) ->
+            "generated_id_for/#{filePath}";
+        }
+
+        file = new File '/base/path/file.html'
+
+        HTML = '<html></html>'
+        RESULT = 'angular.module(\'generated_id_for/path/file.html\',[]).run(function($templateCache){' +
+          '$templateCache.put(\'generated_id_for/path/file.html\',\'<html></html>\');' +
+        '});'
+
+        process HTML, file, (processedContent) ->
+          expect(removeSpacesFrom processedContent).to.equal RESULT
+          done()

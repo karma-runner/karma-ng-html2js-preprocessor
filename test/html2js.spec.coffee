@@ -1,5 +1,10 @@
 describe 'preprocessors html2js', ->
-  expect = require('chai').expect;
+  chai = require('chai')
+
+  templateHelpers = require('./helpers/template_cache')
+  chai.use(templateHelpers)
+
+  expect = chai.expect
 
   html2js = require '../lib/html2js'
   logger = create: -> {debug: ->}
@@ -13,23 +18,20 @@ describe 'preprocessors html2js', ->
     @mtime = mtime
     @isUrl = false
 
-  removeSpacesFrom = (str) ->
-    str.replace /[\s\n]/g, ''
+  createPreprocessor = (config = {}) ->
+    html2js logger, '/base', config
 
   beforeEach ->
-    process = html2js logger, '/base'
-
+    process = createPreprocessor()
 
   it 'should convert html to js code', (done) ->
     file = new File '/base/path/file.html'
-
-    HTML = '<html></html>'
-    RESULT = 'angular.module(\'path/file.html\',[]).run(function($templateCache){' +
-      '$templateCache.put(\'path/file.html\',\'<html></html>\');' +
-    '});'
+    HTML = '<html>test me!</html>'
 
     process HTML, file, (processedContent) ->
-      expect(removeSpacesFrom processedContent).to.equal RESULT
+      expect(processedContent).to.defineModule 'path/file.html'
+      expect(processedContent).to.defineTemplateId 'path/file.html'
+      expect(processedContent).to.haveContent HTML
       done()
 
 
@@ -45,8 +47,9 @@ describe 'preprocessors html2js', ->
     file = new File '/base/path/file.html'
 
     process 'first\nsecond', file, (processedContent) ->
-      expect(removeSpacesFrom processedContent).to.contain "'first\\n'+'second'"
+      expect(processedContent).to.haveContent 'first\nsecond'
       done()
+
 
   it 'should preserve Windows new lines', (done) ->
     file = new File '/base/path/file.html'
@@ -55,9 +58,60 @@ describe 'preprocessors html2js', ->
       expect(processedContent).to.not.contain '\r'
       done()
 
+
   it 'should preserve the backslash character', (done) ->
     file = new File '/base/path/file.html'
 
     process 'first\\second', file, (processedContent) ->
-      expect(removeSpacesFrom processedContent).to.contain "'first\\\\second'"
+      expect(processedContent).to.haveContent 'first\\second'
       done()
+
+
+  describe 'options', ->
+    describe 'stripPrefix', ->
+      beforeEach ->
+        process = createPreprocessor stripPrefix: 'path/'
+
+
+      it 'strips the given prefix from the file path', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent).to.defineModule 'file.html'
+          expect(processedContent).to.defineTemplateId 'file.html'
+          expect(processedContent).to.haveContent HTML
+          done()
+
+
+    describe 'prependPrefix', ->
+      beforeEach ->
+        process = createPreprocessor prependPrefix: 'served/'
+
+
+      it 'prepends the given prefix from the file path', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent).to.defineModule 'served/path/file.html'
+          expect(processedContent).to.defineTemplateId 'served/path/file.html'
+          expect(processedContent).to.haveContent HTML
+          done()
+
+
+    describe 'cacheIdFromPath', ->
+      beforeEach ->
+        process = createPreprocessor
+          cacheIdFromPath: (filePath) -> "generated_id_for/#{filePath}"
+
+
+      it 'invokes custom transform function', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent).to.defineModule 'generated_id_for/path/file.html'
+          expect(processedContent).to.defineTemplateId 'generated_id_for/path/file.html'
+          expect(processedContent).to.haveContent HTML
+          done()

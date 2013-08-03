@@ -10,8 +10,8 @@ The easiest way is to keep `karma-ng-html2js-preprocessor` as a devDependency in
 ```json
 {
   "devDependencies": {
-    "karma": "~0.9",
-    "karma-ng-html2js-preprocessor": "~0.0.1"
+    "karma": "~0.10",
+    "karma-ng-html2js-preprocessor": "~0.1"
   }
 }
 ```

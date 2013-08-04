@@ -29,9 +29,10 @@ describe 'preprocessors html2js', ->
     HTML = '<html>test me!</html>'
 
     process HTML, file, (processedContent) ->
-      expect(processedContent).to.defineModule 'path/file.html'
-      expect(processedContent).to.defineTemplateId 'path/file.html'
-      expect(processedContent).to.haveContent HTML
+      expect(processedContent)
+        .to.defineModule('path/file.html').and
+        .to.defineTemplateId('path/file.html').and
+        .to.haveContent HTML
       done()
 
 
@@ -47,7 +48,10 @@ describe 'preprocessors html2js', ->
     file = new File '/base/path/file.html'
 
     process 'first\nsecond', file, (processedContent) ->
-      expect(processedContent).to.haveContent 'first\nsecond'
+      expect(processedContent)
+        .to.defineModule('path/file.html').and
+        .to.defineTemplateId('path/file.html').and
+        .to.haveContent 'first\nsecond'
       done()
 
 
@@ -63,7 +67,10 @@ describe 'preprocessors html2js', ->
     file = new File '/base/path/file.html'
 
     process 'first\\second', file, (processedContent) ->
-      expect(processedContent).to.haveContent 'first\\second'
+      expect(processedContent)
+        .to.defineModule('path/file.html').and
+        .to.defineTemplateId('path/file.html').and
+        .to.haveContent 'first\\second'
       done()
 
 
@@ -78,9 +85,10 @@ describe 'preprocessors html2js', ->
         HTML = '<html></html>'
 
         process HTML, file, (processedContent) ->
-          expect(processedContent).to.defineModule 'file.html'
-          expect(processedContent).to.defineTemplateId 'file.html'
-          expect(processedContent).to.haveContent HTML
+          expect(processedContent)
+            .to.defineModule('file.html').and
+            .to.defineTemplateId('file.html').and
+            .to.haveContent HTML
           done()
 
 
@@ -94,9 +102,10 @@ describe 'preprocessors html2js', ->
         HTML = '<html></html>'
 
         process HTML, file, (processedContent) ->
-          expect(processedContent).to.defineModule 'served/path/file.html'
-          expect(processedContent).to.defineTemplateId 'served/path/file.html'
-          expect(processedContent).to.haveContent HTML
+          expect(processedContent)
+            .to.defineModule('served/path/file.html').and
+            .to.defineTemplateId('served/path/file.html').and
+            .to.haveContent HTML
           done()
 
 
@@ -111,7 +120,8 @@ describe 'preprocessors html2js', ->
         HTML = '<html></html>'
 
         process HTML, file, (processedContent) ->
-          expect(processedContent).to.defineModule 'generated_id_for/path/file.html'
-          expect(processedContent).to.defineTemplateId 'generated_id_for/path/file.html'
-          expect(processedContent).to.haveContent HTML
+          expect(processedContent)
+            .to.defineModule('generated_id_for/path/file.html').and
+            .to.defineTemplateId('generated_id_for/path/file.html').and
+            .to.haveContent HTML
           done()

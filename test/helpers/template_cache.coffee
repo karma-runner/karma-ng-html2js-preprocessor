@@ -2,6 +2,16 @@ vm = require('vm')
 
 module.exports = (chai, utils) ->
 
+  class AngularModule
+    constructor: (@name, @deps) ->
+      templates = @templates = {}
+
+    run: (block) ->
+      block
+        put: (id, content) =>
+          @templates[id] = content
+
+
   # Evaluates generated js code fot the template cache
   # processedContent - The String to be evaluated
   # Returns an object with the following fields
@@ -9,45 +19,56 @@ module.exports = (chai, utils) ->
   #   templateId - generated template id `$templateCache.put('id', ...)`
   #   templateContent - template content `$templateCache.put(..., <div>cache me!</div>')`
   evaluateTemplate = (processedContent) ->
-    result = {}
+    modules = {}
 
-    sandbox =
+    context =
       # Mock for AngularJS $templateCache
       angular:
-        module: (name, deps = []) ->
-          result.moduleName = name
+        module: (name, deps) ->
+          if deps? then return modules[name] = new AngularModule name, deps
+          if modules[name] then return modules[name]
+          throw new Error "Module #{name} does not exists!"
 
-          run: (block) ->
-            block
-              put: (id, content) ->
-                result.templateId = id
-                result.templateContent = content
-
-    context = vm.createContext(sandbox)
-    vm.runInContext(processedContent, context, 'foo.vm')
-
-    result
+    vm.runInNewContext processedContent, context
+    modules
 
   # Assert that a module with the given name is defined
-  chai.Assertion.addMethod 'defineModule', (expected) ->
-    template = utils.flag(this, 'object')
-    actualName = evaluateTemplate(template).moduleName
+  chai.Assertion.addMethod 'defineModule', (expectedModuleName) ->
+    code = utils.flag @, 'object'
+    modules = evaluateTemplate code
+    module = modules[expectedModuleName]
+    definedModuleNames = (Object.keys modules).join ', '
 
-    @assert actualName is expected,
-      "expected defined module name '#{actualName}' to be '#{expected}'"
+    @assert module?,
+      "expected to define module '#{expectedModuleName}' but only defined #{definedModuleNames}"
+
+    utils.flag @, 'lastAssertedModule', module
+    @
 
   # Assert that a template with the given id is defined
-  chai.Assertion.addMethod 'defineTemplateId', (expected) ->
-    template = utils.flag(this, 'object')
-    actualId = evaluateTemplate(template).templateId
+  chai.Assertion.addMethod 'defineTemplateId', (expectedTemplateId) ->
+    # code = utils.flag @, 'object'
+    # modules = evaluateTemplate code
+    module = utils.flag @, 'lastAssertedModule'
 
-    @assert actualId is expected,
-      "expected defined template id '#{actualId}' to be '#{expected}'"
+    @assert module?,
+      "you have to assert to.defineModule before asserting to.defineTemplateId"
+
+    templateContent = module.templates[expectedTemplateId]
+    definedTemplateIds = (Object.keys module.templates).join ', '
+
+    @assert templateContent?,
+      "expected to define template '#{expectedTemplateId}' but only defined #{definedTemplateIds}"
+
+    utils.flag @, 'lastAssertedTemplateContent', templateContent
+    @
 
   # Assert that the cache has a valid content
-  chai.Assertion.addMethod 'haveContent', (expected) ->
-    template = utils.flag(this, 'object')
-    actualContent = evaluateTemplate(template).templateContent
+  chai.Assertion.addMethod 'haveContent', (expectedContent) ->
+    templateContent = utils.flag @, 'lastAssertedTemplateContent'
 
-    @assert actualContent is expected,
-      "expected template content '#{actualContent}' to be '#{expected}'"
+    @assert templateContent?,
+      "you have to assert to.defineTemplateId before asserting to.haveContent"
+
+    @assert templateContent is expectedContent,
+      "expected template content '#{templateContent}' to be '#{expectedContent}'"

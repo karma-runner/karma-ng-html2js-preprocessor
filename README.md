@@ -32,7 +32,10 @@ module.exports = function(config) {
 
     files: [
       '*.js',
-      '*.html'
+      '*.html',
+      // if template files are in nested directories, you must specify this
+      // or html2js will not see them and tests will produce 'No module:' errors
+      '**/*.html'
     ],
 
     ngHtml2JsPreprocessor: {

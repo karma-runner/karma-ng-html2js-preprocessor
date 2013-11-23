@@ -151,3 +151,69 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+  describe 'options', ->
+    describe 'jade', ->
+      beforeEach ->
+        process = createPreprocessor jade: true
+
+      it 'render the jade template to HTML before processing if jade option is true', (done) ->
+        file = new File '/base/path/file.jade'
+        Jade = 'span Test'
+        HTML = '<span>Test</span>'
+
+        process Jade, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file.jade').and
+            .to.defineTemplateId('path/file.jade').and
+            .to.haveContent HTML
+          done()
+
+  describe 'options', ->
+    describe 'jade', ->
+      beforeEach ->
+        process = createPreprocessor jade: true
+
+      it 'render a jade template with new lines and tabs to HTML before processing if jade option is true', (done) ->
+        file = new File '/base/path/file.jade'
+        Jade = 'div\n\tspan Test'
+        HTML = '<div><span>Test</span></div>'
+
+        process Jade, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file.jade').and
+            .to.defineTemplateId('path/file.jade').and
+            .to.haveContent HTML
+          done()
+
+  describe 'options', ->
+    describe 'jade', ->
+      beforeEach ->
+        process = createPreprocessor()
+
+      it 'does not render the jade template to HTML if jade option is not given', (done) ->
+        file = new File '/base/path/file.jade'
+        Jade = 'span Test'
+
+        process Jade, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file.jade').and
+            .to.defineTemplateId('path/file.jade').and
+            .to.haveContent Jade
+          done()
+
+  describe 'options', ->
+    describe 'jade', ->
+      beforeEach ->
+        process = createPreprocessor jade: false
+
+      it 'does not render the jade template to HTML if jade option is false', (done) ->
+        file = new File '/base/path/file.jade'
+        Jade = 'span Test'
+
+        process Jade, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file.jade').and
+            .to.defineTemplateId('path/file.jade').and
+            .to.haveContent Jade
+          done()

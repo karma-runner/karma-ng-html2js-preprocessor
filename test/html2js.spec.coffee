@@ -91,6 +91,39 @@ describe 'preprocessors html2js', ->
             .to.haveContent HTML
           done()
 
+  describe 'options', ->
+    describe 'stripSuffix', ->
+      beforeEach ->
+        process = createPreprocessor stripSuffix: '.html'
+
+
+      it 'strips the given suffix from the file path', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file').and
+            .to.defineTemplateId('path/file').and
+            .to.haveContent HTML
+          done()
+
+  describe 'options', ->
+    describe 'stripSuffix', ->
+      beforeEach ->
+        process = createPreprocessor()
+
+
+      it 'does not strip any suffix from the file path if none given', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('path/file.html').and
+            .to.defineTemplateId('path/file.html').and
+            .to.haveContent HTML
+          done()
 
     describe 'prependPrefix', ->
       beforeEach ->

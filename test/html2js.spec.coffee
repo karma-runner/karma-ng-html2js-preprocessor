@@ -43,7 +43,6 @@ describe 'preprocessors html2js', ->
       expect(file.path).to.equal '/base/path/file.html.js'
       done()
 
-
   it 'should preserve new lines', (done) ->
     file = new File '/base/path/file.html'
 
@@ -151,3 +150,28 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+    describe 'transformPath', ->
+
+      it 'should change path to *.js with transformPath object config', (done) ->
+        file = new File '/base/path/file.html'
+        
+        process = createPreprocessor
+          transformPath:
+            pattern: '/base/path/'
+            replacement: '/base/scripts/'
+
+        process '', file, (processedContent) ->
+          expect(file.path).to.equal '/base/scripts/file.html.js'
+          done()
+
+      it 'should change path to *.js with transformPath function conig', (done) ->
+        file = new File '/base/path/file.html'
+
+        process = createPreprocessor
+          transformPath: (path)->
+            return path.replace('/base/path/', '/base/scripts/') + '.js';
+
+        process '', file, (processedContent) ->
+          expect(file.path).to.equal '/base/scripts/file.html.js'
+          done()

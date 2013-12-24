@@ -48,9 +48,14 @@ module.exports = function(config) {
         return cacheId;
       },
 
+      // enalbe require-js mode, will generate require(['angular']) part at the very begining
+      // of the code snippet
+      enableRequireJs: true,
+
       // setting this option will create only a single module that contains templates
       // from all the files, so you can load them all with module('foo')
       moduleName: 'foo'
+  
     }
   });
 };
@@ -68,6 +73,15 @@ For instance this `template.html`...
 ```js
 angular.module('template.html', []).config(function($templateCache) {
   $templateCache.put('template.html', '<div>something</div>');
+});
+```
+
+If you have `enableRequireJs` set to ture, that will generate:
+```js
+require(['angular'], function(angular) {
+    angular.module('template.html', []).config(function($templateCache) {
+      $templateCache.put('template.html', '<div>something</div>');
+    });
 });
 ```
 

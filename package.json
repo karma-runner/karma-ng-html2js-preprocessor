@@ -30,7 +30,7 @@
     "grunt-auto-release": "~0.0.2"
   },
   "peerDependencies": {
-    "karma": ">=0.9"
+    "karma": "~0.10"
   },
   "license": "MIT",
   "contributors": [

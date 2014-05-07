@@ -126,7 +126,7 @@ describe 'preprocessors html2js', ->
             .to.haveContent HTML
           done()
 
-    describe 'moduleName', ->
+    describe 'static moduleName', ->
       beforeEach ->
         process = createPreprocessor
           moduleName: 'foo'
@@ -151,3 +151,20 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+    describe 'dynamic moduleName', ->
+      beforeEach ->
+        process = createPreprocessor
+          moduleName: (file) -> return 'foo.' + file.path
+
+      it 'should generate code with a given module name', ->
+        file1 = new File '/base/tpl/one.html'
+        HTML1 = '<span>one</span>'
+        bothFilesContent = ''
+
+        process HTML1, file1, (processedContent) ->
+          bothFilesContent += processedContent
+
+        expect(bothFilesContent)
+        .to.defineModule('foo./base/tpl/one.html.js').and
+        .to.defineTemplateId('tpl/one.html')

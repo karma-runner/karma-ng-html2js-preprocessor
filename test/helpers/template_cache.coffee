@@ -12,7 +12,7 @@ module.exports = (chai, utils) ->
           @templates[id] = content
 
 
-  # Evaluates generated js code fot the template cache
+  # Evaluates generated js code for the template cache
   # processedContent - The String to be evaluated
   # Returns an object with the following fields
   #   moduleName - generated module name `angular.module('myApp')...`
@@ -31,6 +31,56 @@ module.exports = (chai, utils) ->
 
     vm.runInNewContext processedContent, context
     modules
+
+  # Evaluates generated js code (with requirejs template) for the template cache
+  # processedContent - The String to be evaluated
+  # Returns an object with the following fields
+  #   dependencies - array of dependencies required by the require.js wrapper
+  #   dependencyVars - the variables mapped to the dependency array
+  #   module - a string that represents the module code.       
+  evaluateRequireJsTemplate = (processedContent) ->
+    info = {}
+
+    console.log processedContent
+    context =
+      # Mock for RequireJS wrapper
+      require: (deps, module) ->
+        info.dependencies = deps 
+        info.dependencyVars = getFunctionParams module
+        info.module = '(' + module.toString() + ')()';
+
+    vm.runInNewContext processedContent, context
+    info
+
+  # Helper function that retrieves the arguments of a function.
+  getFunctionParams = (func) ->
+    STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+    ARGUMENT_NAMES = /([^\s,]+)/g;
+    fnStr = func.toString()
+                .replace STRIP_COMMENTS, ''
+    startIndex = fnStr.indexOf '('
+    endIndex = fnStr.indexOf ')'
+    result = fnStr.slice startIndex + 1, endIndex
+    result = result.match ARGUMENT_NAMES
+    if not result? then result = []
+    result
+
+  # Assert that a requirejs wrapper is defined
+  chai.Assertion.addMethod 'defineRequireJsWrapper', (expectedDependencies) ->
+    code = utils.flag @, 'object'
+    info = evaluateRequireJsTemplate code
+    expectedDependenciesStr = expectedDependencies.join ','
+    dependenciesStr = info.dependencies.join ','
+    dependencyVarsStr = info.dependencyVars.join ','
+
+    @assert dependenciesStr is dependencyVarsStr,
+      "expected dependency arguments of the wrapper '#{dependencyVarsStr}' to match module dependencies '#{dependenciesStr}'"
+
+    @assert dependenciesStr is expectedDependenciesStr,
+      "expected module dependencies '#{dependenciesStr}' to be '#{expectedDependenciesStr}'"
+
+    utils.flag @, 'object', info.module
+    @
 
   # Assert that a module with the given name is defined
   chai.Assertion.addMethod 'defineModule', (expectedModuleName) ->

@@ -151,3 +151,24 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+    describe 'requireDeps', ->
+      beforeEach ->
+        process = createPreprocessor
+          moduleName: 'foo'
+          requireDeps: ['bar', 'baz']
+
+      it 'should generate code with a given module name', ->
+        file1 = new File '/base/tpl/one.html'
+        HTML1 = '<span>one</span>'
+        results = ''
+
+        process HTML1, file1, (processedContent) ->
+          results = processedContent
+
+        # evaluate both files (to simulate multiple files in the browser)
+        expect(results)
+          .to.defineRequireJsWrapper(['bar', 'baz']).and
+          .to.defineModule('foo').and
+          .to.defineTemplateId('tpl/one.html').and
+          .to.haveContent(HTML1)

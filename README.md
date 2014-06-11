@@ -50,7 +50,12 @@ module.exports = function(config) {
 
       // setting this option will create only a single module that contains templates
       // from all the files, so you can load them all with module('foo')
-      moduleName: 'foo'
+      moduleName: 'foo',
+
+      // If this option is set, then the resultant array will be wrapped with a 
+      // require ([deps], wrapper) call that makes this payload requirejs compatible.
+      // This option will only be evaluated if the moduleName is specified.
+      requireDeps: ['angular']
     }
   });
 };
@@ -70,6 +75,29 @@ angular.module('template.html', []).config(function($templateCache) {
   $templateCache.put('template.html', '<div>something</div>');
 });
 ```
+
+When the `requireDeps` option is used as shown in the example above, this `template.html`
+```html
+<div>something</div>
+```
+... will be served as `template.html.js`:
+```js
+require(['angular'],
+    function (angular) {
+        (function (moduleName, htmlPath, contents) {
+            var module;
+            try {
+                module = angular.module(moduleName);
+            } catch (e) {
+                module = angular.module(moduleName, []);
+            }
+            module.run(function ($templateCache) {
+                $templateCache.put(htmlPath, contents);
+            });
+        })('foo', 'tpl/one.html', '<span>one</span>');
+    })
+```
+
 
 See the [ng-directive-testing](https://github.com/vojtajina/ng-directive-testing) for a complete example.
 

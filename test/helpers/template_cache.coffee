@@ -41,7 +41,6 @@ module.exports = (chai, utils) ->
   evaluateRequireJsTemplate = (processedContent) ->
     info = {}
 
-    console.log processedContent
     context =
       # Mock for RequireJS wrapper
       require: (deps, module) ->

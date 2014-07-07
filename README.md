@@ -33,6 +33,7 @@ module.exports = function(config) {
     files: [
       '*.js',
       '*.html',
+      '*.html.ext',
       // if you wanna load template files in nested directories, you must use this
       '**/*.html'
     ],
@@ -40,6 +41,7 @@ module.exports = function(config) {
     ngHtml2JsPreprocessor: {
       // strip this from the file path
       stripPrefix: 'public/',
+      stripSufix: '.ext',
       // prepend this to the
       prependPrefix: 'served/',
 

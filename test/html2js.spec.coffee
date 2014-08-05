@@ -126,6 +126,73 @@ describe 'preprocessors html2js', ->
             .to.haveContent HTML
           done()
 
+    describe 'templatePathReplaces', ->
+      describe 'transforms path via all the matching regexps', ->
+
+        it 'ignores unmatching regexps', (done) ->
+
+          process = createPreprocessor
+            templatePathReplaces: [
+              {
+                pattern: /doesntmatch/
+                replacement: 'bar'
+              },
+            ]
+
+          file = new File '/base/path/file.html'
+          HTML = '<html></html>'
+
+          process HTML, file, (processedContent) ->
+            expect(processedContent)
+              .to.defineModule('path/file.html').and
+              .to.defineTemplateId('path/file.html').and
+              .to.haveContent HTML
+            done()
+
+        it 'transforms path via the regexp', (done) ->
+
+          process = createPreprocessor
+            templatePathReplaces: [
+              {
+                pattern: /path/
+                replacement: 'bar'
+              },
+            ]
+
+          file = new File '/base/path/file.html'
+          HTML = '<html></html>'
+
+          process HTML, file, (processedContent) ->
+            expect(processedContent)
+              .to.defineModule('bar/file.html').and
+              .to.defineTemplateId('bar/file.html').and
+              .to.haveContent HTML
+            done()
+
+        it 'transforms path with subsequent matching regexps', (done) ->
+
+          process = createPreprocessor
+            templatePathReplaces: [
+              {
+                pattern: /path/
+                replacement: 'bar'
+              },
+              {
+                pattern: /bar/
+                replacement: 'foo'
+              },
+            ]
+
+          file = new File '/base/path/file.html'
+          HTML = '<html></html>'
+
+          process HTML, file, (processedContent) ->
+            expect(processedContent)
+              .to.defineModule('foo/file.html').and
+              .to.defineTemplateId('foo/file.html').and
+              .to.haveContent HTML
+            done()
+
     describe 'moduleName', ->
       beforeEach ->
         process = createPreprocessor

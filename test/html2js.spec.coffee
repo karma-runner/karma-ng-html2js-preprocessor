@@ -126,6 +126,39 @@ describe 'preprocessors html2js', ->
             .to.haveContent HTML
           done()
 
+
+    describe 'custom template', ->
+      beforeEach ->
+        process = createPreprocessor template: 'TEMPLATE_TEST'
+
+
+      it 'uses custom template', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.contain 'TEMPLATE_TEST'
+          done()
+
+
+    describe 'custom single module template', ->
+      beforeEach ->
+        process = createPreprocessor
+          moduleName: 'foo'
+          singleModuleTpl: 'TEMPLATE_TEST'
+
+
+      it 'uses custom template', (done) ->
+        file = new File '/base/path/file.html'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.contain 'TEMPLATE_TEST'
+          done()
+
+
     describe 'moduleName', ->
       beforeEach ->
         process = createPreprocessor

@@ -73,6 +73,59 @@ describe 'preprocessors html2js', ->
         .to.haveContent 'first\\second'
       done()
 
+  it 'should split out type="text/ng-template"', (done) ->
+    file = new File '/base/path/file.html'
+
+    process '<script id="foo" type="text/ng-template">Foo</script>', file, (processedContent) ->
+      expect(processedContent)
+        .to.defineModule('foo').and
+        .to.defineTemplateId('foo').and
+        .to.haveContent 'Foo'
+      done()
+
+  it 'should split out type="text/ng-template" with id second', (done) ->
+    file = new File '/base/path/file.html'
+
+    process '<script type="text/ng-template" id="foo">Foo</script>', file, (processedContent) ->
+      expect(processedContent)
+        .to.defineModule('foo').and
+        .to.defineTemplateId('foo').and
+        .to.haveContent 'Foo'
+      done()
+
+  it 'should split out type="text/ng-template" with id second and other attributes', (done) ->
+    file = new File '/base/path/file.html'
+
+    process '<script name="whut" type="text/ng-template" class="none" id="foo" ng-something>Foo</script>', file, (processedContent) ->
+      expect(processedContent)
+        .to.defineModule('foo').and
+        .to.defineTemplateId('foo').and
+        .to.haveContent 'Foo'
+      done()
+
+  it 'should split out type="text/ng-template" and original template', (done) ->
+    file = new File '/base/path/file.html'
+
+    process 'before <script id="foo" type="text/ng-template">Foo</script> after', file, (processedContent) ->
+      expect(processedContent)
+        .to.defineModule('foo').and
+        .to.defineTemplateId('foo').and
+        .to.haveContent 'Foo'
+      expect(processedContent)
+        .to.defineModule('path/file.html').and
+        .to.defineTemplateId('path/file.html').and
+        .to.haveContent 'before  after'
+      done()
+
+  it 'should handle newlines in type="text/ng-template"', (done) ->
+    file = new File '/base/path/file.html'
+
+    process '<script\ntype="text/ng-template"\nid="foo">\nFoo\nBoo\n</script>', file, (processedContent) ->
+      expect(processedContent)
+        .to.defineModule('foo').and
+        .to.defineTemplateId('foo').and
+        .to.haveContent '\nFoo\nBoo\n'
+      done()
 
   describe 'options', ->
     describe 'stripPrefix', ->

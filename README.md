@@ -2,7 +2,7 @@
 
 > Preprocessor for converting HTML files to [AngularJS](http://angularjs.org/) templates.
 
-*Note:* If you are looking for a general preprocessor that is not tight to Angular, check out [karma-html2js-preprocessor](https://github.com/karma-runner/karma-html2js-preprocessor).
+*Note:* If you are looking for a general preprocessor that is not tied to Angular, check out [karma-html2js-preprocessor](https://github.com/karma-runner/karma-html2js-preprocessor).
 
 ## Installation
 

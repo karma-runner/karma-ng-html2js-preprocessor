@@ -14,7 +14,7 @@ module.exports = (chai, utils) ->
 
   # Evaluates generated js code fot the template cache
   # processedContent - The String to be evaluated
-  # useRequire -
+  # useRequire - Use a fake require.js
   # Returns an object with the following fields
   #   moduleName - generated module name `angular.module('myApp')...`
   #   templateId - generated template id `$templateCache.put('id', ...)`

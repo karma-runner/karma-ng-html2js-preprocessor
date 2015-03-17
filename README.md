@@ -52,7 +52,14 @@ module.exports = function(config) {
 
       // setting this option will create only a single module that contains templates
       // from all the files, so you can load them all with module('foo')
-      moduleName: 'foo'
+      moduleName: 'foo',
+      // setting this option will use require.js to wrap the preprocessed templates
+      // if karma.frameworks contains 'requirejs' you only need to specify this
+      // option set if you are using non-default values
+      require: {
+        // the name of the angular shim, defaults to angular
+        angularShim: 'angular'
+      }
     }
   });
 };
@@ -74,6 +81,27 @@ angular.module('template.html', []).config(function($templateCache) {
 ```
 
 See the [ng-directive-testing](https://github.com/vojtajina/ng-directive-testing) for a complete example.
+
+----
+
+The dependencies for the test-main.js file should be modified according to the code example below to properly load the templates as requirements for the test.
+
+```js
+var dependencies = [];
+
+var DEP_REGEXP = /(Spec|\.html)\.js$/;
+
+var pathToModule = function(path) {
+    return path.replace(/^\/base\//, '').replace(/\.js$/, '');
+};
+
+Object.keys(window.__karma__.files).forEach(function(file) {
+    if (DEP_REGEXP.test(file)) {
+        // Normalize paths to RequireJS module names.
+        dependencies.push(pathToModule(file));
+    }
+});
+```
 
 ----
 

@@ -175,3 +175,61 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+    describe 'enableRequireJs', ->
+
+      it 'should generate code with a given module name with a require block', ->
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process = createPreprocessor
+          moduleName: 'foo'
+          enableRequireJs: true
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('foo', true).and
+            .to.defineTemplateId('path/file.html').and
+            .to.haveContent(HTML)
+
+      it 'should generate code with a require block', ->
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process = createPreprocessor
+          enableRequireJs: true
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+          .to.defineModule('path/file.html', true).and
+          .to.defineTemplateId('path/file.html').and
+          .to.haveContent(HTML)
+
+      it 'should generate code with a given module name without a require block', ->
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process = createPreprocessor
+          moduleName: 'foo'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+          .to.defineModule('foo', false).and
+          .to.defineTemplateId('path/file.html').and
+          .to.haveContent(HTML)
+
+      it 'should generate code with a require block', ->
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process = createPreprocessor
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+          .to.defineModule('path/file.html', false).and
+          .to.defineTemplateId('path/file.html').and
+          .to.haveContent(HTML)

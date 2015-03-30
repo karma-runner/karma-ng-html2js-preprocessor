@@ -15,11 +15,12 @@ module.exports = (chai, utils) ->
 
   # Evaluates generated js code fot the template cache
   # processedContent - The String to be evaluated
+  # useRequire - Use a fake require.js
   # Returns an object with the following fields
   #   moduleName - generated module name `angular.module('myApp')...`
   #   templateId - generated template id `$templateCache.put('id', ...)`
   #   templateContent - template content `$templateCache.put(..., <div>cache me!</div>')`
-  evaluateTemplate = (processedContent) ->
+  evaluateTemplate = (processedContent, useRequire = false) ->
     modules = {}
 
     context =
@@ -30,13 +31,16 @@ module.exports = (chai, utils) ->
           if modules[name] then return modules[name]
           throw new Error "Module #{name} does not exists!"
 
+    if useRequire
+      context.require = (deps, fn) -> fn context.angular
+
     vm.runInNewContext processedContent, context
     modules
 
   # Assert that a module with the given name is defined
-  chai.Assertion.addMethod 'defineModule', (expectedModuleName) ->
+  chai.Assertion.addMethod 'defineModule', (expectedModuleName, useRequireJs = false) ->
     code = utils.flag @, 'object'
-    modules = evaluateTemplate code
+    modules = evaluateTemplate code, useRequireJs
     module = modules[expectedModuleName]
     definedModuleNames = (Object.keys modules).join ', '
 

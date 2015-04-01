@@ -50,8 +50,10 @@ module.exports = function(config) {
         return cacheId;
       },
 
-      // setting this option will create only a single module that contains templates
-      // from all the files, so you can load them all with module('foo')
+      // - setting this option will create only a single module that contains templates
+      //   from all the files, so you can load them all with module('foo')
+      // - you may provide a function(relativeTemplatePath) instead of a string if you'd
+      //   like to generate modules dynamically
       moduleName: 'foo'
     }
   });

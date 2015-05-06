@@ -68,7 +68,7 @@ For instance this `template.html`...
 ```
 ... will be served as `template.html.js`:
 ```js
-angular.module('template.html', []).config(function($templateCache) {
+angular.module('template.html', []).run(function($templateCache) {
   $templateCache.put('template.html', '<div>something</div>');
 });
 ```

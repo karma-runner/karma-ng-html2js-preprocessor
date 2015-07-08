@@ -116,6 +116,22 @@ describe 'preprocessors html2js', ->
           done()
 
 
+    describe 'stripSuffix', ->
+      beforeEach ->
+        process = createPreprocessor stripSuffix: '.ext'
+
+      it 'strips the given suffix from the file path', (done) ->
+        file = new File 'file.html.ext'
+        HTML = '<html></html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineModule('file.html').and
+            .to.defineTemplateId('file.html').and
+            .to.haveContent HTML
+          done()
+
+
     describe 'stripSufix', ->
       beforeEach ->
         process = createPreprocessor stripSufix: '.ext'

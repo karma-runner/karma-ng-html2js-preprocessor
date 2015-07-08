@@ -50,13 +50,60 @@ module.exports = function(config) {
         return cacheId;
       },
 
-      // setting this option will create only a single module that contains templates
-      // from all the files, so you can load them all with module('foo')
+      // - setting this option will create only a single module that contains templates
+      //   from all the files, so you can load them all with module('foo')
+      // - you may provide a function(htmlPath, originalPath) instead of a string
+      //   if you'd like to generate modules dynamically
+      //   htmlPath is a originalPath stripped and/or prepended
+      //   with all provided suffixes and prefixes
       moduleName: 'foo'
     }
   });
 };
 ```
+
+### Multiple module names
+
+Use *function* if more than one module that contains templates is required.
+
+```js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    // ...
+
+    ngHtml2JsPreprocessor: {
+      // ...
+
+      moduleName: function (htmlPath, originalPath) {
+        return htmlPath.split('/')[0];
+      }
+    }
+  });
+};
+```
+
+If only some of the templates should be placed in the modules,
+return `''`, `null` or `undefined` for those which should not.
+
+```js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    // ...
+
+    ngHtml2JsPreprocessor: {
+      // ...
+
+      moduleName: function (htmlPath, originalPath) {
+        var module = htmlPath.split('/')[0];
+        return module !== 'tpl' ? module : null;
+      }
+    }
+  });
+};
+```
+
 
 ## How does it work ?
 

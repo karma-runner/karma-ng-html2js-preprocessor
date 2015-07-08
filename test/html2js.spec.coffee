@@ -151,11 +151,9 @@ describe 'preprocessors html2js', ->
           done()
 
     describe 'moduleName', ->
-      beforeEach ->
+      it 'should generate code with a given module name', ->
         process = createPreprocessor
           moduleName: 'foo'
-
-      it 'should generate code with a given module name', ->
         file1 = new File '/base/tpl/one.html'
         HTML1 = '<span>one</span>'
         file2 = new File '/base/tpl/two.html'
@@ -175,3 +173,40 @@ describe 'preprocessors html2js', ->
           .to.haveContent(HTML1).and
           .to.defineTemplateId('tpl/two.html').and
           .to.haveContent(HTML2)
+
+
+      it 'should generate code with multiple module names', ->
+        process = createPreprocessor
+          moduleName: (htmlPath) ->
+            module = htmlPath.split('/')[0]
+            if module != 'tpl'
+              module
+
+        file1 = new File '/base/app/one.html'
+        HTML1 = '<span>one</span>'
+        file2 = new File '/base/common/two.html'
+        HTML2 = '<span>two</span>'
+        file3 = new File '/base/tpl/three.html'
+        HTML3 = '<span>three</span>'
+        threeFilesContent = ''
+
+        process HTML1, file1, (processedContent) ->
+          threeFilesContent += processedContent
+
+        process HTML2, file2, (processedContent) ->
+          threeFilesContent += processedContent
+
+        process HTML3, file3, (processedContent) ->
+          threeFilesContent += processedContent
+
+        # evaluate three files (to simulate multiple module names)
+        expect(threeFilesContent)
+          .to.defineModule('app').and
+          .to.defineTemplateId('app/one.html').and
+          .to.haveContent(HTML1).and
+          .to.defineModule('common').and
+          .to.defineTemplateId('common/two.html').and
+          .to.haveContent(HTML2)
+          .to.defineModule('tpl/three.html').and
+          .to.defineTemplateId('tpl/three.html').and
+          .to.haveContent(HTML3)

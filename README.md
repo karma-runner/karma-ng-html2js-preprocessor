@@ -58,6 +58,36 @@ module.exports = function(config) {
 };
 ```
 
+## Each preprocessor options
+```js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    preprocessors: {
+      'src/folder1/**/*.html': ['htmlProcessor1'],
+      'src/folder2/**/*.html': ['htmlProcessor2']
+    },
+
+    files: [
+      '**/*.html'
+    ],
+
+    customPreprocessors: {
+      htmlProcessor1: {
+        base: 'ng-html2js-configurable',
+        stripPrefix: 'src/folder1/',
+        moduleName: 'template.module1'
+      },
+      htmlProcessor2: {
+        base: 'ng-html2js-configurable',
+        stripPrefix: 'src/folder2/',
+        moduleName: 'template.module2'
+      }
+    }
+  });
+};
+```
+
 ## How does it work ?
 
 This preprocessor converts HTML files into JS strings and generates Angular modules. These modules, when loaded, puts these HTML files into the `$templateCache` and therefore Angular won't try to fetch them from the server.

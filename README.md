@@ -1,8 +1,10 @@
 # karma-ng-html2js-preprocessor [![Build Status](https://travis-ci.org/karma-runner/karma-ng-html2js-preprocessor.svg?branch=master)](https://travis-ci.org/karma-runner/karma-ng-html2js-preprocessor)
 
-> Preprocessor for converting HTML files to [AngularJS](http://angularjs.org/) templates.
+> Preprocessor for converting HTML files to [AngularJS 1.x](http://angularjs.org/) templates.
 
 *Note:* If you are looking for a general preprocessor that is not tied to Angular, check out [karma-html2js-preprocessor](https://github.com/karma-runner/karma-html2js-preprocessor).
+
+*Note:* If you are using Angular 2.x, use [karma-redirect-preprocessor](https://github.com/sjelin/karma-redirect-preprocessor).
 
 ## Installation
 

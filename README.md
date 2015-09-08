@@ -54,7 +54,12 @@ module.exports = function(config) {
       prependPrefix: 'served/',
 
       // or define a custom transform function
+      // - cacheId returned is used to load template
+      //   module(cacheId) will return template at filepath
       cacheIdFromPath: function(filepath) {
+        // example strips 'public/' from anywhere in the path
+        // module(app/templates/template.html) => app/public/templates/template.html
+        var cacheId = filepath.strip('public/', '');
         return cacheId;
       },
 

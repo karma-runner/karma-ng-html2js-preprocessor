@@ -1,3 +1,20 @@
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.1.2...v0.2.0) (2015-10-08)
+
+
+### Bug Fixes
+
+* explicit annotations for $templateCache dependency ([d8f2ec5](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/d8f2ec5))
+* explicit annotations for $templateCache dependency ([c7666b9](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/c7666b9))
+* Suffix is misspelled ([e7e20dd](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/e7e20dd)), closes [#56](https://github.com/karma-runner/karma-ng-html2js-preprocessor/issues/56)
+* **runner:** removing the html2js name overwrite ([50e4f9e](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/50e4f9e)), closes [#43](https://github.com/karma-runner/karma-ng-html2js-preprocessor/issues/43)
+
+### Features
+
+* Multiple module names ([e0d3620](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/e0d3620))
+
+
+
 
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.1.1...v0.1.2) (2014-10-24)

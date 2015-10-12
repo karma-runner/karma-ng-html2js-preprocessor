@@ -226,3 +226,35 @@ describe 'preprocessors html2js', ->
           .to.defineModule('tpl/three.html').and
           .to.defineTemplateId('tpl/three.html').and
           .to.haveContent(HTML3)
+
+    describe 'RequireJS', ->
+      it 'should wrap module with require', (done) ->
+        process = createPreprocessor
+          enableRequireJs: true
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.requireModule('angular')
+            .to.defineModule('path/file.html')
+            .to.defineTemplateId('path/file.html').and
+            .to.haveContent HTML
+          done()
+
+      it 'should use custom angular module ID', (done) ->
+        process = createPreprocessor
+          enableRequireJs: true
+          requireJsAngularId: 'foo'
+
+        file = new File '/base/path/file.html'
+        HTML = '<html>test me!</html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.requireModule('foo')
+            .to.defineModule('path/file.html')
+            .to.defineTemplateId('path/file.html').and
+            .to.haveContent HTML
+          done()

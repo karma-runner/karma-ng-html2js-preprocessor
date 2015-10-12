@@ -1,4 +1,5 @@
 vm = require('vm')
+sinon = require('sinon');
 
 module.exports = (chai, utils) ->
 
@@ -19,7 +20,7 @@ module.exports = (chai, utils) ->
   #   moduleName - generated module name `angular.module('myApp')...`
   #   templateId - generated template id `$templateCache.put('id', ...)`
   #   templateContent - template content `$templateCache.put(..., <div>cache me!</div>')`
-  evaluateTemplate = (processedContent) ->
+  evaluateTemplate = (processedContent, require=null) ->
     modules = {}
 
     context =
@@ -30,8 +31,20 @@ module.exports = (chai, utils) ->
           if modules[name] then return modules[name]
           throw new Error "Module #{name} does not exists!"
 
+    context.require = (require || sinon.stub()).callsArgWith(1, context.angular)
+
     vm.runInNewContext processedContent, context
     modules
+
+  # Assert that require is used
+  chai.Assertion.addMethod 'requireModule', (expectedModuleName) ->
+    require = sinon.stub()
+
+    code = utils.flag @, 'object'
+    evaluateTemplate code, require
+
+    sinon.assert.calledWith(require, [expectedModuleName])
+    @
 
   # Assert that a module with the given name is defined
   chai.Assertion.addMethod 'defineModule', (expectedModuleName) ->

@@ -1,3 +1,13 @@
+<a name="0.2.1"></a>
+## [0.2.1](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.2.0...v0.2.1) (2016-02-12)
+
+
+### Features
+
+* Support loading Angular with RequireJS ([08748a2](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/08748a2))
+
+
+
 <a name="0.2.0"></a>
 # [0.2.0](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.1.2...v0.2.0) (2015-10-08)
 

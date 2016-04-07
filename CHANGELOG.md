@@ -1,3 +1,13 @@
+<a name="0.2.2"></a>
+## [0.2.2](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.2.1...v0.2.2) (2016-04-07)
+
+
+### Features
+
+* Add support for Angular 2 template cache ([09609a0](https://github.com/karma-runner/karma-ng-html2js-preprocessor/commit/09609a0))
+
+
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://github.com/karma-runner/karma-ng-html2js-preprocessor/compare/v0.2.0...v0.2.1) (2016-02-12)
 

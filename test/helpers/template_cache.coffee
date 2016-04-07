@@ -36,6 +36,14 @@ module.exports = (chai, utils) ->
     vm.runInNewContext processedContent, context
     modules
 
+  evaluateAngular2Template = (processedContent) ->
+    mockWindow = {}
+    context =
+      window: mockWindow
+
+    vm.runInNewContext processedContent, context
+    mockWindow
+
   # Assert that require is used
   chai.Assertion.addMethod 'requireModule', (expectedModuleName) ->
     require = sinon.stub()
@@ -77,12 +85,30 @@ module.exports = (chai, utils) ->
     utils.flag @, 'lastAssertedTemplateContent', templateContent
     @
 
+  # Assert that a template with given id was defined in a Angular 2 template
+  chai.Assertion.addMethod 'defineAngular2TemplateId', (expectedTemplateId) ->
+    code = utils.flag @, 'object'
+    mockWindow = evaluateAngular2Template code
+
+    templateCache = mockWindow.$templateCache
+    @assert templateCache?,
+      "expected window.$templateCache to be defined but was not defined"
+
+    templateContent = templateCache[expectedTemplateId]
+    definedTemplateIds = (Object.keys templateCache).join ', '
+    @assert templateContent?,
+      "expected to define template '#{expectedTemplateId}' but only defined #{definedTemplateIds}"
+
+    utils.flag @, 'lastAssertedTemplateContent', templateContent
+    @
+
   # Assert that the cache has a valid content
   chai.Assertion.addMethod 'haveContent', (expectedContent) ->
     templateContent = utils.flag @, 'lastAssertedTemplateContent'
 
     @assert templateContent?,
-      "you have to assert to.defineTemplateId before asserting to.haveContent"
+      "you have to assert to.defineTemplateId or to.defineAngular2TemplateId " +
+      "before asserting to.haveContent"
 
     @assert templateContent is expectedContent,
       "expected template content '#{templateContent}' to be '#{expectedContent}'"

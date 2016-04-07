@@ -258,3 +258,17 @@ describe 'preprocessors html2js', ->
             .to.defineTemplateId('path/file.html').and
             .to.haveContent HTML
           done()
+
+    describe 'angular version 2', ->
+      it 'should store the template in window.$templateCache', (done) ->
+        process = createPreprocessor
+          angular: 2
+
+        file = new File '/base/path/file.html'
+        HTML  = '<html>test</html>'
+
+        process HTML, file, (processedContent) ->
+          expect(processedContent)
+            .to.defineAngular2TemplateId('path/file.html').and
+            .to.haveContent HTML
+          done()

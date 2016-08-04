@@ -39,6 +39,9 @@
   "peerDependencies": {
     "karma": ">=0.9"
   },
+  "engines": {
+    "node": "~0.10"
+  },
   "license": "MIT",
   "contributors": [
     "Friedel Ziegelmayer <dignifiedquire@gmail.com>",

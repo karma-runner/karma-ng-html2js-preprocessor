@@ -33,7 +33,7 @@
     "grunt-npm": "^0.0.2",
     "grunt-simple-mocha": "^0.4",
     "load-grunt-tasks": "^3.3.0",
-    "mocha": "^2.3.3",
+    "mocha": "^3.2.0",
     "sinon": "^1.17.1"
   },
   "peerDependencies": {

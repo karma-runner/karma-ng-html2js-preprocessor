@@ -53,7 +53,7 @@ module.exports = function(config) {
       cacheIdFromPath: function(filepath) {
         // example strips 'public/' from anywhere in the path
         // module(app/templates/template.html) => app/public/templates/template.html
-        var cacheId = filepath.strip('public/', '');
+        var cacheId = filepath.replace('public/', '');
         return cacheId;
       },
 
